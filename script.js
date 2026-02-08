@@ -1,4 +1,17 @@
 document.addEventListener('DOMContentLoaded',()=>{
+  // load external data (shaala links and ICSE essays) then initialize the app
+  const loadExternal = async ()=>{
+    try{
+      const [linksRes, essaysRes] = await Promise.all([
+        fetch('data/shaala-links.html'),
+        fetch('icse-essays.html')
+      ]);
+      if(linksRes && linksRes.ok){ document.getElementById('source').innerHTML = await linksRes.text(); }
+      if(essaysRes && essaysRes.ok){ document.getElementById('icse-essays-content').innerHTML = await essaysRes.text(); }
+    }catch(e){ console.warn('Failed to load external resources', e); }
+  };
+
+  loadExternal().then(()=>{ // start app after external content is loaded
   const sections = [
     {key:'descriptive', title:'Descriptive Composition'},
     {key:'narrative', title:'Narrative & Stories'},
@@ -119,4 +132,5 @@ document.addEventListener('DOMContentLoaded',()=>{
 
   // initial: show descriptive first (already in order) and set 'all' filter
   setFilter('all');
-});
+  }); // end loadExternal().then
+}); // end DOMContentLoaded
